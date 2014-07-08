@@ -1,0 +1,22 @@
+<html>
+        <head>
+                <title>SimpleTab</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body>
+                <div>SimpleTab Events</div>
+
+                <script src="js/libs/jquery/jquery.js"></script>
+                <script src="js/SimpleTab.js"></script>
+                <script>
+                        $(document).ready(function() {
+                                $(window).on('tabBlur', function(e) {
+                                        $('body').append('<p>Blurred at ' + e.timeStamp + '</p>');
+                                }).on('tabFocus', function(e) {
+                                        $('body').append('<p>Focus at ' + e.timeStamp + '</p>');
+                                });
+                        });
+                </script>
+        </body>
+</html>
