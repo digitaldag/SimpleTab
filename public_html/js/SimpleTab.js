@@ -1,12 +1,18 @@
-/* SimpleTab v0.1
+/* SimpleTab v0.2
  * Fire tabBlur and tabFocus when the tab is focussed or lose the focus.
  * The difference with $(window).on('focus')/$(window).on('blur') is basically that it is launched even if the tab is active, and you clicked the url bar or the search bar
  * 
  * Usage:
  * $(window).on('tabBlur',function(){console.log('Blurred')});
  * $(window).on('tabFocus',function(){console.log('Focussed')});
+ * $('#status').tabBlur(function(){$(this).html('Blurred');});
+ * $('#status').tabFocus(function(){$(this).html('Focussed');});
  * 
  * Changelog
+ * v0.2 (30/07/2014)
+ * + Added tabFocus/tabBlur functions
+ * + Changed scope fro the functions (now you can use "this" in the callback function)
+ * 
  * v0.1 (08/07/2014)
  * + Initial release
  * 
@@ -14,7 +20,7 @@
  * Contacts: digitald(at)big-d-web(dot)com
  */
 (function($) {
-        window.enVars = {};
+        window.enVars = window.enVars || {};
 
         if (typeof document.hidden !== "undefined") {
                 enVars.visibilityValue = "hidden";
@@ -33,12 +39,36 @@
         document.addEventListener(enVars.visibilityChange, function() {
                 if (document[enVars.visibilityValue]) {
                         window.tabFocus = false;
-                        $(window).triggerHandler('tabBlur');
+                        $('*').each(function(){$(this).triggerHandler('tabBlur');});
                 }
-                else
-                {
+                else{
                         window.tabFocus = true;
-                        $(window).triggerHandler('tabFocus');
+                        $('*').each(function(){$(this).triggerHandler('tabFocus');});
                 }
         }, false);
+
+        $.fn.tabFocus = function(callback) {
+                var that = this;
+                document.addEventListener(enVars.visibilityChange, function(e) {
+                        if (!document[enVars.visibilityValue]) {
+                                if (typeof callback === 'function') {
+                                        p = $.proxy(callback, that,e);
+                                        p();
+                                }
+                        }
+                }, false);
+        };
+
+        $.fn.tabBlur = function(callback) {
+                var that = this;
+                document.addEventListener(enVars.visibilityChange, function(e) {
+                        if (document[enVars.visibilityValue]) {
+                                if (typeof callback === 'function') {
+                                        p = $.proxy(callback, that,e);
+                                        p();
+                                }
+                        }
+                }, false);
+        };
+
 })(jQuery);

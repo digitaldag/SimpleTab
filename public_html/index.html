@@ -6,16 +6,23 @@
         </head>
         <body>
                 <div>SimpleTab Events</div>
+                <div id='status' style="border: 1px #000 solid"></div>
+                <div id='log'></div>
 
                 <script src="js/libs/jquery/jquery.js"></script>
                 <script src="js/SimpleTab.js"></script>
                 <script>
                         $(document).ready(function() {
-                                $(window).on('tabBlur', function(e) {
-                                        $('body').append('<p>Blurred at ' + e.timeStamp + '</p>');
-                                }).on('tabFocus', function(e) {
-                                        $('body').append('<p>Focus at ' + e.timeStamp + '</p>');
+                                
+                                $('#status').on('tabBlur', function(e) {
+                                        $(this).html('<p>Blurred on ' + e.timeStamp + '</p>');
                                 });
+                                $('#status').on('tabFocus', function(e) {
+                                        $(this).html('<p>Focus on ' + e.timeStamp + '</p>');
+                                });
+                
+                                $('#log').tabFocus(function(e){$(this).append('<p>Focus at '+e.timeStamp+'</p>')});
+                                $('#log').tabBlur(function(e){$(this).append('<p>Blur at '+e.timeStamp+'</p>')});
                         });
                 </script>
         </body>
